@@ -1,6 +1,9 @@
 let elCountryList = document.querySelector(".list");
+let elSelect = document.querySelector(".country-select");
+let elSearchInput = document.querySelector(".search-input");
 
 function renderCountry(arr, list) {
+  list.innerHTML = null;
   arr.map((item) => {
     let elCountryItem = document.createElement("li");
     let elCountryImg = document.createElement("img");
@@ -22,8 +25,7 @@ function renderCountry(arr, list) {
 
     elcontentWrapper.className = "p-[24px]";
 
-    elwrapper.className =
-      "w-full h-[40px] flex items-center mt-[10px] justify-between";
+    elwrapper.className ="w-full h-[40px] flex items-center mt-[10px] justify-between";
 
     elCountryLikeImg.innerHTML = `
         <button
@@ -81,3 +83,36 @@ function renderCountry(arr, list) {
   });
 }
 renderCountry(countrys, elCountryList);
+
+// Select part start
+function renderSelectOption(arr, list) {
+  arr.forEach((item) => {
+    let elOption = document.createElement("option");
+    elOption.textContent = item.capital;
+    elOption.value = item.capital.toLowerCase();
+    list.append(elOption);
+  });
+}
+renderSelectOption(countrys, elSelect);
+
+elSelect.addEventListener("change", function (evt) {
+  if (evt.target.value == "all") {
+    renderCountry(countrys, elCountryList);
+  } else {
+    const result = countrys.filter(
+      (item) => item.capital.toLowerCase() == evt.target.value
+    );
+    renderCountry(result, elCountryList);
+  }
+});
+// Select part end
+
+// Search part start
+elSearchInput.addEventListener("input", function (e) {
+  const value = e.target.value.toLowerCase();
+  const searchedList = countrys.filter((item) =>
+    item.name.toLowerCase().includes(value)
+  );
+  renderCountry(searchedList, elCountryList);
+});
+// Search part end
